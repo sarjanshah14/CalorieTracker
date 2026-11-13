@@ -1,61 +1,48 @@
-# CalorieTracker
+# NutriLife
 
-CalorieTracker is a full-stack nutrition and fitness tracking app with a Django REST API backend and a React + Vite frontend.
+A nutrition and fitness tracker aimed at Indian, vegetarian diets. You log meals (by photo or by hand), see daily and weekly calories and macros, get a diet plan, and get workout suggestions.
 
-## Tech Stack
+Built for the **Triveni hackathon**, where it placed **2nd**.
 
-- Backend: Django, Django REST Framework, SimpleJWT
-- Frontend: React 19, TypeScript, Vite, Tailwind CSS
-- Database: SQLite (default in this repo)
+## Features
 
-## Project Structure
+- **Meal logging:** manual entry, or a photo sent to Google Gemini to estimate calories, protein, carbs and fat.
+- **Health score and swaps:** each meal gets a 1–10 score, and fried or processed foods get a healthier swap from a built-in list (rule-based, in `api/services/coach_logic.py`).
+- **Diet plans:** create and save several vegetarian plans; the active plan sets your daily calorie goal.
+- **Insights:** rule-based daily insights, exercise minutes needed to burn off a surplus, and a 30-day weight projection (7,700 kcal ≈ 1 kg).
+- **Workouts, water tracking, meal reminders, and a nutrition chatbot** (Gemini).
+- **Accounts** with JWT login.
 
-- `backend/`: Django project settings and URL config
-- `api/`: REST API app (auth, profile, meals, calories, diet plans, insights, workouts)
-- `app/`: React frontend
-- `docs/API_ENDPOINTS.md`: endpoint reference
+## Tech
 
-## Prerequisites
+- **Backend:** Django, Django REST Framework, SimpleJWT, Pillow, Google GenAI SDK
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui, Framer Motion
+- **Database:** SQLite
 
-- Python 3.10+
-- Node.js 18+
-- npm
+## Project layout
 
-## Backend Setup
+```
+backend/            Django settings and URLs
+api/                REST API: models, views, services (AI, coaching rules, insights)
+app/                React frontend (pages: Dashboard, MealLogger, DietPlan, Workouts, Profile)
+scripts/            seed_demo_data.py: creates demo users with meals and plans
+docs/API_ENDPOINTS.md   endpoint reference
+```
+
+## Run it locally
 
 ```bash
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py runserver
+python manage.py runserver          # API at http://127.0.0.1:8000/api/v1
 ```
-
-Backend runs at `http://127.0.0.1:8000`.
-
-## Frontend Setup
 
 ```bash
 cd app
 npm install
-npm run dev
+npm run dev                         # http://localhost:5173
 ```
 
-Frontend runs at `http://127.0.0.1:5173` (default Vite port).
+## Note on the AI features
 
-## Core Features
-
-- JWT auth (`register`, `login`, `me`)
-- User profile with calorie-related metrics
-- Meal logging and daily/weekly calorie tracking
-- Diet plan generation and retrieval
-- Workout suggestions and insights
-- Food image analysis endpoint
-
-## API Base
-
-- Base URL: `http://127.0.0.1:8000/api/v1`
-- Detailed docs: `docs/API_ENDPOINTS.md`
-
-## Notes
-
-- Gemini API key usage in `api/services/ai_service.py` is currently disabled, so AI features fall back to default responses.
-# CalorieTracker
+The Gemini keys in `api/services/ai_service.py` are left empty, so photo scanning and the chatbot return default answers. To try them, put your own key in `API_KEY_1` (and don't commit it).
